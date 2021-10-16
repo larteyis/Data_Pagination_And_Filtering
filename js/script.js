@@ -68,22 +68,73 @@ function addPagination (list){
    // Interactivity of the buttons
    buttons = linkList.querySelectorAll("li button");
    firstButton = buttons[0];
-   buttons.className = "active";
+   firstButton.className = "active";
 
    linkList.addEventListener('click', (e) => {
       const eventTarget = e.target;
-  
-      if (eventTarget.tagName === 'button') {
-         button.classList.remove('active');
-         eventTarget.classList.add('active');
-      }
+   // If pagination button is clicked highlight the active page
+      if (eventTarget.type === 'button') {
+         for (const button of buttons) 
+         { button.classList.remove('active');
+           eventTarget.classList.add('active');
+         }
    const pageNumber = eventTarget.textContent;
    showPage (list, pageNumber);
+      }
    });
 }
-
-
 
 // Call functions
 showPage(data, 1)
 addPagination(data)
+
+
+// creates textbox and button for search
+let searchBar =`
+   <label for="search" class="student-search">
+      <span>Search by name</span>
+      <input id="search" placeholder="Search by name...">
+      <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+   </label>`;
+
+let h2 = document.querySelector('h2');
+h2.insertAdjacentHTML('afterend', searchBar);
+
+let input = document.querySelector('input');
+let searchButton = document.querySelector('button');
+const notFound = document.createElement('p'); //paragraph to hold not found message if search is unsuccessful
+notFound.className = 'no-results';
+const label = input.parentNode;
+
+
+const filter = () => {
+   const text = input.value;
+   const filteredStudents = [];
+   notFound.textContent = '';
+
+   if (text.includes(' ')) {   
+      return [];
+   } else {
+      for (let i=0; i < data.length; i++) {
+         const existingName = `${data[i]['name']['first']} ${data[i]['name']['last']}`.toUpperCase();
+         if (existingName.includes(text.toUpperCase())) {
+            filteredStudents.push(data[i]);
+         }
+      }
+   }
+
+   if (filteredStudents.length == 0) { // if there are no matches, shows not found message 
+      notFound.textContent = 'No results found';
+   }
+   
+   showPage(filteredStudents, 1); 
+   addPagination(filteredStudents);
+}
+
+// keyup event listener to list filters in real-time as the user types the name. 
+label.addEventListener('submit', filter);
+input.addEventListener('keyup', filter);
+
+
+
+
