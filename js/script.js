@@ -105,11 +105,12 @@ let searchButton = document.querySelector('button');
 const notFound = document.createElement('p'); //paragraph to hold not found message if search is unsuccessful
 notFound.className = 'no-results';
 const label = input.parentNode;
+const div = search.parentNode;
+div.appendChild(notFound);
 
-
-const filter = () => {
-   const text = input.value;
-   const filteredStudents = [];
+let filter = () => {
+   let text = input.value;
+   let filteredStudents = [];
    notFound.textContent = '';
 
    if (text.includes(' ')) {   
@@ -119,19 +120,22 @@ const filter = () => {
          const existingName = `${data[i]['name']['first']} ${data[i]['name']['last']}`.toUpperCase();
          if (existingName.includes(text.toUpperCase())) {
             filteredStudents.push(data[i]);
+
          }
       }
    }
-
-   if (filteredStudents.length == 0) { // if there are no matches, shows not found message 
-      notFound.textContent = 'No results found';
-   }
    
-   showPage(filteredStudents, 1); 
-   addPagination(filteredStudents);
+   if (filteredStudents.length === 0 ) { // if there are no matches, shows "No results found" message 
+      notFound.textContent = "No results found";
+      const pagination = document.querySelector('.pagination');
+      pagination.style.display = 'none';
+   }
+         showPage(filteredStudents, 1); 
+         addPagination(filteredStudents);
 }
+         
 
-// keyup event listener to list filters in real-time as the user types the name. 
+// keyup event listener filters list in real-time as the user types the name. 
 label.addEventListener('submit', filter);
 input.addEventListener('keyup', filter);
 
