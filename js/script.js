@@ -120,18 +120,15 @@ let filter = () => {
          const existingName = `${data[i]['name']['first']} ${data[i]['name']['last']}`.toUpperCase();
          if (existingName.includes(text.toUpperCase())) {
             filteredStudents.push(data[i]);
-
          }
       }
    }
    
    if (filteredStudents.length === 0 ) { // if there are no matches, shows "No results found" message 
       notFound.textContent = "No results found";
-      const pagination = document.querySelector('.pagination');
-      pagination.style.display = 'none';
    }
-         showPage(filteredStudents, 1); 
-         addPagination(filteredStudents);
+   addPagination(filteredStudents); 
+   showPage(filteredStudents, 1); 
 }
          
 
@@ -139,6 +136,8 @@ let filter = () => {
 label.addEventListener('submit', filter);
 input.addEventListener('keyup', filter);
 
+showPage(data, 1); 
+addPagination(data);
 
 
 
